@@ -13,6 +13,8 @@ private String holder_name;
 private String bank_name;
 	@SerializedName("balance")
 private int balance;
+	@SerializedName("pin_number")
+	private String pin_number;
 	public int getAccount_number() {
 		return account_number;
 	}
@@ -36,6 +38,12 @@ private int balance;
 	}
 	public void setBalance(int balance) {
 		this.balance = balance;
+	}
+	public String getPin_number() {
+		return pin_number;
+	}
+	public void setPin_number(String pin_number) {
+		this.pin_number = pin_number;
 	}
 
 

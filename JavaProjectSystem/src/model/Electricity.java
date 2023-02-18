@@ -25,6 +25,18 @@ public class Electricity {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
+	
+	public Electricity(String firstName, String lastName, String email, String sex,  String startDate,
+			String endDate ,String elctdept) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.sex = sex;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.elctdept = elctdept;
+	}
+
 	public int getId() {
 		return id;
 	}

@@ -194,7 +194,7 @@
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <TableView fx:id="elecTable" prefHeight="417.0" prefWidth="621.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TableView fx:id="elecTable" prefHeight="403.0" prefWidth="678.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <columns>
                                     <TableColumn fx:id="rowId" prefWidth="75.0" text="Id" />
                                     <TableColumn fx:id="rowFirstName" prefWidth="75.0" text="First Name" />
@@ -209,6 +209,11 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
+                              <Label fx:id="elecTabelMessage" alignment="CENTER" layoutX="2.0" layoutY="422.0" prefHeight="17.0" prefWidth="678.0" textFill="#940808">
+                                 <font>
+                                    <Font name="Serif Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </AnchorPane>
                      </content>
@@ -365,13 +370,13 @@
                                           <Font name="System Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox prefHeight="45.0" prefWidth="353.0" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 1.5px; -fx-border-radius: 5px;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <ComboBox fx:id="bankName" prefHeight="45.0" prefWidth="353.0" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 1.5px; -fx-border-radius: 5px;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <Label layoutX="10.0" layoutY="226.0" prefHeight="47.0" prefWidth="121.0" text="Pin Number" GridPane.rowIndex="5">
                                        <font>
                                           <Font name="System Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <PasswordField prefHeight="48.0" prefWidth="348.0" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 1.5px; -fx-border-radius: 5px;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <PasswordField fx:id="pinNumber" prefHeight="48.0" prefWidth="348.0" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 1.5px; -fx-border-radius: 5px;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                  </children>
                               </GridPane>
                               <Label alignment="CENTER" layoutX="1.0" layoutY="419.0" prefHeight="30.0" prefWidth="674.0" />
@@ -411,7 +416,7 @@
    <left>
       <AnchorPane prefHeight="557.0" prefWidth="185.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox layoutX="1.0" prefHeight="557.0" prefWidth="190.0" style="-fx-background-color: #09af00;">
+            <VBox layoutX="1.0" prefHeight="557.0" prefWidth="190.0" style="-fx-background-color: #651FFF;">
                <children>
                   <Button mnemonicParsing="false" prefHeight="64.0" prefWidth="213.0" style="-fx-background-color: transparent;" text="Customer" textFill="WHITE">
                      <graphic>

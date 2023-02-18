@@ -7,6 +7,7 @@ import javafx.util.Callback;
 import apiEntity.Account;
 import apiRequest.APIClient;
 import apiRequest.AccountAPI;
+import common.CommonMethod;
 import connection.Connector;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,7 +36,7 @@ import retrofit2.Retrofit;
 
 public class CustmenuController {
 ObservableList<String> genderList=FXCollections.observableArrayList("Male","Female");
-ObservableList<String> bankList =FXCollections.observableArrayList("Commercial Bank Of Ethiopia","Dashen Bank","Abysinia Bank","Wegagen Bank","Nib International Bank");
+ObservableList<String> bankList =FXCollections.observableArrayList("Commercial Bank","Dashen Bank","Buna Bank","Abysinia Bank");
 ObservableList<Electricity> elecList =FXCollections.observableArrayList();
 ObservableList<Water> waterList =FXCollections.observableArrayList();
 ObservableList<Telecom> teleList =FXCollections.observableArrayList();
@@ -163,11 +164,15 @@ private Label messageProfile;
 @FXML
 private TextField fullName;
 @FXML
+private ComboBox<String> bankName;
+@FXML
 private TextField accountNumber;
 @FXML
 private TextField amount;
 @FXML
 private DatePicker date;
+@FXML
+private TextField pinNumber;
 @FXML
 private Label paymentMessage;
 @FXML
@@ -232,6 +237,9 @@ private Tab payement;
 @FXML
 private Tab paymentinfo;
 @FXML
+private Label elecTabelMessage;
+
+@FXML
 private void electricityUtility() {
 	tp.getSelectionModel().select(electricity);
 }
@@ -250,6 +258,7 @@ private void profile() {
 @FXML
 public void displayElecData() throws SQLException {
 Electricity	elecData=elecTable.getSelectionModel().getSelectedItem();
+
 ResultSet res=Connector.getData("select * from eleccust where id='"+elecData.getId()+"'");
 while(res.next()) {
 	title.setText("Pay for your electric utility");
@@ -273,6 +282,7 @@ while(res.next()) {
 	lb_pendDate.setText(res.getString("endDate"));
 	service.setText("electric");
 }
+
 }
 @FXML
 public void displayWaterData() throws SQLException {
@@ -330,194 +340,9 @@ while(rts.next()) {
 }
 @FXML
 private void payment() {
-		try {
-	int userAccountNumber=Integer.valueOf(accountNumber.getText());
-	AccountAPI accountAPI=APIClient.getClient().create(AccountAPI.class);
-	accountAPI.findById(userAccountNumber).enqueue(new retrofit2.Callback<Account> (){
+	CommonMethod pay=new CommonMethod();
+	pay.payment(accountNumber.getText(), amount.getText(), service.getText(), lb_pAmount.getText(), emailAddress.getText(), emailAddress.getText(), emailAddress.getText(), fullName.getText(), bankName.getValue(), pinNumber.getText());
 
-		@Override
-		public void onFailure(Call<Account> arg0, Throwable t) {
-			t.printStackTrace();
-			
-		}
-
-		@Override
-		public void onResponse(Call<Account> arg0, Response<Account> response) {
-			if(response.isSuccessful()) {
-				Account acc =response.body();
-				int bankAccountNumber=acc.getAccount_number();
-				int bank_balance=acc.getBalance();
-				String bankHolderName=acc.getHolder_name();
-				String bankName=acc.getBank_name();
-				int userBalance=Integer.valueOf(amount.getText());
-				int payedBalance=bank_balance-userBalance;
-				if(payedBalance>0) {
-					acc.setBalance(payedBalance);
-					accountAPI.updateAccount(acc).enqueue(new retrofit2.Callback<Void> () {
-
-						@Override
-						public void onFailure(Call<Void> arg0, Throwable t) {
-							
-							t.printStackTrace();
-						}
-
-						@Override
-						public void onResponse(Call<Void> arg0, Response<Void> response) {
-						if(response.isSuccessful()) {
-							if(service.getText().equals("electric")) {
-								
-										try {
-											accountAPI.findById(1000500).enqueue(new retrofit2.Callback<Account> () {
-
-												@Override
-												public void onFailure(Call<Account> arg0, Throwable t) {
-													t.printStackTrace();
-												}
-
-												@Override
-												public void onResponse(Call<Account> arg0, Response<Account> response) {
-													if(response.isSuccessful()) {
-														Account account=response.body();
-														int userbalance=Integer.valueOf(amount.getText());
-														int bankbalance=account.getBalance();
-														int holderBalance=userbalance+bankbalance;
-														account.setBalance(holderBalance);
-														accountAPI.updateAccount(account).enqueue(new retrofit2.Callback<Void> () {
-
-															@Override
-															public void onFailure(Call<Void> arg0, Throwable t) {
-																t.printStackTrace();
-															}
-
-															@Override
-															public void onResponse(Call<Void> call, Response<Void> response) {
-																try {
-																		int value=Integer.valueOf(lb_pAmount.getText());
-																		int updatedData=value-userbalance;
-																		String strValue=String.valueOf(updatedData);
-																		Connector.updateData("update eleccust set elctdept='"+updatedData+"' where email='"+emailAddress.getText()+"'");
-																} catch (Exception e) {
-																	e.printStackTrace();
-																} 
-																
-															}
-															
-														});
-													}
-												}
-												
-											});
-											}catch(Exception e) {
-												e.printStackTrace();
-											}
-
-
-								
-							}else if(service.getText().equals("water")) {
-										try {
-											accountAPI.findById(1841000).enqueue(new retrofit2.Callback<Account> () {
-
-												@Override
-												public void onFailure(Call<Account> arg0, Throwable t) {
-													t.printStackTrace();
-												}
-
-												@Override
-												public void onResponse(Call<Account> arg0, Response<Account> response) {
-													if(response.isSuccessful()) {
-														Account waccount=response.body();
-														int userbalance=Integer.valueOf(amount.getText());
-														int bankbalance=waccount.getBalance();
-														int holderBalance=userbalance+bankbalance;
-														waccount.setBalance(holderBalance);
-														accountAPI.updateAccount(waccount).enqueue(new retrofit2.Callback<Void> () {
-
-															@Override
-															public void onFailure(Call<Void> arg0, Throwable t) {
-																t.printStackTrace();
-															}
-
-															@Override
-															public void onResponse(Call<Void> call, Response<Void> response) {
-																try {
-																	int wvalue=Integer.valueOf(lb_pAmount.getText());
-																	int wupdatedData=wvalue-userbalance;
-																	Connector.updateData("update watercust set waterDept='"+wupdatedData+"' where email='"+emailAddress.getText()+"'");
-															} catch (Exception e) {
-																e.printStackTrace();
-															} 	
-															}
-															
-														});
-													}
-												}
-												
-											});
-											}catch(Exception e) {
-												e.printStackTrace();
-											}
-							}else if(service.getText().equals("telecom")) {
-								try {
-											accountAPI.findById(2562200).enqueue(new retrofit2.Callback<Account> () {
-
-												@Override
-												public void onFailure(Call<Account> arg0, Throwable t) {
-													t.printStackTrace();
-												}
-
-												@Override
-												public void onResponse(Call<Account> arg0, Response<Account> response) {
-													if(response.isSuccessful()) {
-														Account taccount =response.body();
-														int userbalance=Integer.valueOf(amount.getText());
-														int bankbalance=taccount.getBalance();
-														int holderBalance=userbalance+bankbalance;
-														taccount.setBalance(holderBalance);
-														accountAPI.updateAccount(taccount).enqueue(new retrofit2.Callback<Void> () {
-
-															@Override
-															public void onFailure(Call<Void> arg0, Throwable t) {
-																t.printStackTrace();
-															}
-
-															@Override
-															public void onResponse(Call<Void> call, Response<Void> response) {
-																try {
-																	int tvalue=Integer.valueOf(lb_pAmount.getText());
-																	int tupdatedData=tvalue-userbalance;
-																	Connector.updateData("update telecust set teleDept='"+tupdatedData+"' where email='"+emailAddress.getText()+"'");
-															} catch (Exception e) {
-																e.printStackTrace();
-															} 	
-															}
-															
-														});
-													}
-												}
-												
-											});
-											}catch(Exception e) {
-												e.printStackTrace();
-											}
-							}else {
-								System.out.println("payment error");
-							}
-						}
-							
-						}
-						
-					});
-				}
-			}
-			
-		}
-		
-	});
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-
-	tp.getSelectionModel().select(paymentinfo);	
 }
 @FXML
 private void doCustomerMenu() throws SQLException{
@@ -586,7 +411,7 @@ private void doCustomerMenu() throws SQLException{
 	
 	txt_housenumber.setText("House Number");
 	lbHouseNumber.setText(houseNumber.getText());	
-	messageProfile.setText("You are registered as "+displayMessage+"customer");
+	messageProfile.setText("You are registered as "+displayMessage+" customer");
 
 	information.setDisable(true);
 	profile.setDisable(false);
@@ -652,6 +477,9 @@ private void gopaymentInfo() {
 
 @FXML
 private void initialize() {
+	
+	bankName.setValue("Commercial Bank");
+	bankName.setItems(bankList);
 	Gender.setValue("Male");
 	Gender.setItems(genderList);
 	
@@ -679,11 +507,17 @@ private void initialize() {
 						 );
 				 paybtn.setOnAction(event ->{
 					 try {
+						 Electricity	elecData=elecTable.getSelectionModel().getSelectedItem();
+						 if(elecData==null) {
+						 	elecTabelMessage.setText("please select the row!");
+						 }else { 
 						displayElecData();
+						tp.getSelectionModel().select(payement);
+						 }
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-					 tp.getSelectionModel().select(payement);
+					 
 				 });
 				 setGraphic(paybtn);
 			 }

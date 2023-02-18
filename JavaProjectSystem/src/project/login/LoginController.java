@@ -30,33 +30,41 @@ private void backHome() throws IOException {
 }
 @FXML
 private void goToServicePage() throws IOException, SQLException {
-	ResultSet rs=Connector.getData("select* from userdata where username='"+txt_luserName.getText()+"'and password='"+txt_lpassword.getText()+"'");
+	if(txt_luserName.getText().equals("")) {
+		lb_message.setText("Email is required!");
+	}else if(txt_lpassword.getText().equals("")) {
+		lb_message.setText("Password required!");
+	}else if(lchoice.getValue().equals("")) {
+		lb_message.setText("Usertype required!");
+	}else {
+	ResultSet rs=Connector.getData("select* from userdata where username='"+txt_luserName.getText()+"'and usertype='"+lchoice.getValue()+"'");
 	if(lchoice.getValue().equals("Customer")) {
 		if(rs.next()) {
 		main.showCustmenuloginPage();
 		}else {
-			
+			lb_message.setText("You are not registerd as a Customer!");
 		}
 	}else if(lchoice.getValue().equals("Electricity Officer")) {
 		if(rs.next()) {
 			main.showElectricityPage();
 		}else {
-			System.out.println("Connection error");
+			lb_message.setText("You are not registerd as Electricity Officer!");
 		}
 	}else if(lchoice.getValue().equals("Water Service Officer")){
 		if(rs.next()) {
 			main.showWaterPage();
 		}else {
-			System.out.println("Connection error");
+			lb_message.setText("You are not registerd as Water Service Officer!");
 		}
 	}else if(lchoice.getValue().equals("Telecom Officer")){
 		if(rs.next()) {
 			main.showTelecomPage();
 		}else {
-			System.out.println("Connection error");
+			lb_message.setText("You are not registerd as Telecom Officer!");
 		}		
 	}else {
-		System.out.println("Loged in Successfull");
+		lb_message.setText("Logged in succesfull!");
+	}
 	}
 }
 @FXML
